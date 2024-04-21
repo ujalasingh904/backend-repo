@@ -149,12 +149,13 @@ const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set: {
-                refreshToken: undefined
+            $unset: {
+                refreshToken: 1
             }
-        }, {
-        new: true
-    }
+        },
+        {
+            new: true
+        }
 
     )
 
@@ -414,19 +415,19 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                             pipiline: [
                                 {
                                     $project: {
-                                        fullName:1,
-                                        username:1,
-                                        avatar:1
+                                        fullName: 1,
+                                        username: 1,
+                                        avatar: 1
                                     }
                                 }
                             ]
                         }
                     },
                     {
-                        $addFields:{
-                            owner:{
-                                $first:"$owner"
-                            } 
+                        $addFields: {
+                            owner: {
+                                $first: "$owner"
+                            }
                         }
                     }
                 ]
@@ -435,8 +436,8 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     ])
 
     return res
-    .status(200)
-    .json(new ApiRespones(200,user[0].watchHistory,"Watch history fetched successfully"))
+        .status(200)
+        .json(new ApiRespones(200, user[0].watchHistory, "Watch history fetched successfully"))
 })
 
 export {
